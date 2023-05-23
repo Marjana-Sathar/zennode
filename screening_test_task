@@ -1,0 +1,60 @@
+import math
+products={"Product_A":20,"Product_B":40,"Product_C":50}
+gift_wrap_fee = 1
+shipping_fee_per_package = 5
+products_per_package = 10
+subtotal=0
+total_discount=0
+quandity_list={}
+total_quandity=0
+gift_wrap_total=0
+shipping_total=0
+for product in products:
+    quandity=int(input(f"enter the quandity of {product}: "))
+    is_gift_wrapped = input(f"Is {product} wrapped as a gift? (yes/no): ").lower() == "yes"
+    quandity_list[products[product]]=quandity
+    product_price=quandity*products[product]
+    subtotal+=product_price
+    if(quandity>10):
+        bulk_5_discount_amount=(product_price*5)/100
+        if(bulk_5_discount_amount>total_discount):
+            total_discount=bulk_5_discount_amount
+            discount_name="bulk_5_discount"
+            discount_amount=subtotal-bulk_5_discount_amount
+    if is_gift_wrapped:
+        gift_wrap_total += quandity * gift_wrap_fee
+    print(f"Product: {product}\tQuantity: {quandity}\tTotal: ${product_price}")
+if(subtotal>200):
+     flat_discount=10
+     if(flat_discount>total_discount):
+          total_discount=flat_discount
+          discount_name="flat_10_discount"
+          discount_amount=subtotal-10
+fifteen_quandity_list={}
+total_quandity=sum(quandity_list.values())
+shipping_total += math.ceil(total_quandity/products_per_package) * shipping_fee_per_package
+for i in quandity_list:
+     if(quandity_list[i]>15):
+          fifteen_quandity_list[i]=quandity_list[i]
+if(total_quandity>20):
+    bulk_10_discount_amount=(subtotal*10)/100
+    if(bulk_10_discount_amount>total_discount):
+            total_discount=bulk_10_discount_amount
+            discount_name="bulk_10_discount"
+            discount_amount=subtotal-bulk_10_discount_amount
+tiered_discount_amount=0
+if(total_quandity>30 and len(fifteen_quandity_list)!=0):
+    for i in fifteen_quandity_list:
+            discount_quandity=fifteen_quandity_list[i]-15
+            amount=(discount_quandity*i*50)/100
+            tiered_discount_amount+=amount
+    if(tiered_discount_amount>total_discount):
+            total_discount=tiered_discount_amount
+            discount_name="tiered_50_discount"
+            discount_amount=subtotal-tiered_discount_amount
+total = subtotal - total_discount + gift_wrap_total + shipping_total
+
+print(f"Subtotal: ${subtotal}")
+print(f"Discount name: {discount_name}\tDiscount_amount: ${discount_amount}")
+print(f"Shipping Charge: ${shipping_total}\tGift wrap fee: ${gift_wrap_total}")
+print(f"Total: ${total}")
